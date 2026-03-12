@@ -20,6 +20,7 @@ public class Produit {
 
     private String nomProduit;
 
+    @Enumerated(EnumType.STRING)
     private Etat etat;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

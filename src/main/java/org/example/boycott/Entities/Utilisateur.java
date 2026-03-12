@@ -6,8 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -25,6 +25,7 @@ public class Utilisateur {
 
     private Date dateInsri;
 
+    @Enumerated(EnumType.STRING)
     private TypeUtilisateur typeUtilisateur;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

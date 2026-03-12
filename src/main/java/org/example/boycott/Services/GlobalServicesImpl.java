@@ -21,11 +21,12 @@ public class GlobalServicesImpl implements IGlobalServices {
         return repoUtilisateur.save(u);
     }
 
-    public Categorie ajoutCategorie(Categorie c) {
-        return repoCategorie.save(c);
+    public Produit ajouterProduitEtCategories(Produit p) {
+        repoCategorie.saveAll(p.getCategories());
+        return repoProduit.save(p);
     }
 
-    public Produit ajoutProduit(Produit p) {
-        return repoProduit.save(p);
+    public Categorie ajoutCategorie(Categorie c) {
+        return repoCategorie.save(c);
     }
 }
