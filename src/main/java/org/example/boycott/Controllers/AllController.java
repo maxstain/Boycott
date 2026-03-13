@@ -6,16 +6,18 @@ import org.example.boycott.Entities.Categorie;
 import org.example.boycott.Entities.Produit;
 import org.example.boycott.Entities.Utilisateur;
 import org.example.boycott.Services.IGlobalServices;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Tag(name = "Examen Boycott")
 @RestController
 @AllArgsConstructor
 @RequestMapping("/boycott")
 public class AllController {
+
+    @Autowired
     IGlobalServices globalServices;
 
     @PostMapping("/utilisateur/ajout")
@@ -31,5 +33,10 @@ public class AllController {
     @PostMapping("/produit/ajout")
     public Produit ajouterProduitEtCategories(@RequestBody Produit p) {
         return globalServices.ajouterProduitEtCategories(p);
+    }
+
+    @PostMapping("/affecterProdAUser")
+    public void affecterProdAUser(@RequestBody List<String> nomProuit, @RequestParam String email) {
+        globalServices.affecterProdAUser(nomProuit, email);
     }
 }
