@@ -1,16 +1,17 @@
 package org.example.boycott.Services;
 
 import lombok.AllArgsConstructor;
-import org.example.boycott.Entities.Categorie;
-import org.example.boycott.Entities.Produit;
-import org.example.boycott.Entities.Utilisateur;
+import org.example.boycott.Entities.*;
 import org.example.boycott.Repositories.RepoCategorie;
 import org.example.boycott.Repositories.RepoProduit;
 import org.example.boycott.Repositories.RepoUtilisateur;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -23,6 +24,28 @@ public class GlobalServicesImpl implements IGlobalServices {
     RepoProduit repoProduit;
     @Autowired
     RepoCategorie repoCategorie;
+
+    @Scheduled(fixedRate = 40000)
+    public void afficherEtMettreAJourProduits() {
+
+        List<Utilisateur> admins = repoUtilisateur.findByTypeUtilisateur(TypeUtilisateur.ADMIN);
+
+        for (Utilisateur u : admins) {
+            if (u.getProduits() != null) {
+                for (Produit p : u.getProduits()) {
+                    p.setEtat(Etat.BOYCOTT);
+                    repoProduit.save(p);
+                }
+            }
+        }
+
+        List<Produit> produits = repoProduit.findAll();
+
+        System.out.println("Liste des produits :");
+        for (Produit p : produits) {
+            System.out.println(p);
+        }
+    }
 
     public Utilisateur ajouterUtilisateur(Utilisateur u) {
         return repoUtilisateur.save(u);
@@ -38,13 +61,17 @@ public class GlobalServicesImpl implements IGlobalServices {
         return repoProduit.save(p);
     }
 
+    @Transactional
     public Produit ajouterProduitEtCategories(Produit p) {
         if (p.getCategories() != null) {
             for (Categorie c : p.getCategories()) {
                 if (c.getProduits() == null) {
                     c.setProduits(new ArrayList<>());
                 }
-                c.getProduits().add(p);
+                if (!c.getProduits().contains(p)) {
+                    c.getProduits().add(p);
+                }
+                repoCategorie.save(c);
             }
         }
         return repoProduit.save(p);
@@ -63,5 +90,23 @@ public class GlobalServicesImpl implements IGlobalServices {
             }
         }
         repoUtilisateur.save(u);
+    }
+
+    public boolean chercherProduit(String nomProduit) {
+
+        Produit produit = repoProduit.findByNomProduit(nomProduit);
+
+        if (produit == null) {
+            return false;
+        }
+
+        return produit.getEtat() == Etat.BOYCOTT;
+    }
+
+    public List<Utilisateur> recupererUtilisateursParCriteres(
+            String nomCategorie, Date d, TypeUtilisateur tu) {
+
+        return repoUtilisateur.recupererUtilisateursParCriteres(
+                nomCategorie, d, tu);
     }
 }

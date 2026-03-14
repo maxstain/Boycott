@@ -21,17 +21,16 @@ public class ProduitCategorieTests {
     private IGlobalServices globalServices;
 
     @Test
-    @Transactional
-    public void testAjouterProduitEtCategories() {
+    public void testAjouterProduitEtCategoriesNoTransaction() {
         Produit p = new Produit();
-        p.setNomProduit("Produit Test");
+        p.setNomProduit("Produit Test 2");
         p.setEtat(Etat.BOYCOTT);
 
         Categorie c1 = new Categorie();
-        c1.setNomCategorie("Catégorie 1");
+        c1.setNomCategorie("Catégorie 1 New");
 
         Categorie c2 = new Categorie();
-        c2.setNomCategorie("Catégorie 2");
+        c2.setNomCategorie("Catégorie 2 New");
 
         List<Categorie> categories = new ArrayList<>();
         categories.add(c1);

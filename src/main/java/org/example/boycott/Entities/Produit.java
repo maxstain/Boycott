@@ -24,7 +24,6 @@ public class Produit {
     private Etat etat;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JsonIgnore
     @ToString.Exclude
     List<Categorie> categories = new ArrayList<Categorie>();
 }
